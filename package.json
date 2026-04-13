@@ -59,6 +59,9 @@
     "react-router-dom": "^6.30.0",
     "styled-components": "^6.0.0"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "strapi": {
     "kind": "plugin",
     "name": "auto-slug",
