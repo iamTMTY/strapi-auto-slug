@@ -19,15 +19,19 @@ function slugify(text) {
 
 /**
  * Find a unique slug by appending an incrementing suffix if needed.
+ *
+ * In Strapi v5 a single document can have multiple DB rows (draft, published,
+ * per-locale). Uniqueness is checked across *documents*, not rows — rows that
+ * share the same documentId are treated as one entity.
  */
-async function findUniqueSlug(strapi, uid, slugField, baseSlug, excludeId) {
+async function findUniqueSlug(strapi, uid, slugField, baseSlug, excludeDocumentId) {
   let candidate = baseSlug;
   let counter = 1;
 
   while (true) {
     const where = { [slugField]: candidate };
-    if (excludeId) {
-      where.id = { $ne: excludeId };
+    if (excludeDocumentId) {
+      where.documentId = { $ne: excludeDocumentId };
     }
 
     const existing = await strapi.db.query(uid).findMany({ where, limit: 1 });
@@ -70,16 +74,17 @@ const bootstrap = ({ strapi }) => {
 
       async beforeCreate(event) {
         const { data } = event.params;
+        const documentId = data.documentId;
 
         for (const [slugField, sourceField] of Object.entries(slugFields)) {
           if (data[slugField]) {
             // Slug provided (from admin or API) — ensure uniqueness
-            data[slugField] = await findUniqueSlug(strapi, uid, slugField, data[slugField]);
+            data[slugField] = await findUniqueSlug(strapi, uid, slugField, data[slugField], documentId);
           } else if (data[sourceField]) {
             // Fallback for API calls without the admin panel
             const baseSlug = slugify(data[sourceField]);
             if (baseSlug) {
-              data[slugField] = await findUniqueSlug(strapi, uid, slugField, baseSlug);
+              data[slugField] = await findUniqueSlug(strapi, uid, slugField, baseSlug, documentId);
             }
           }
         }
@@ -90,13 +95,12 @@ const bootstrap = ({ strapi }) => {
 
         for (const [slugField] of Object.entries(slugFields)) {
           if (data[slugField] && where?.id) {
-            // Only check uniqueness if the slug actually changed
-            const existing = await strapi.db.query(uid).findOne({
+            const current = await strapi.db.query(uid).findOne({
               where: { id: where.id },
             });
-            if (existing && data[slugField] !== existing[slugField]) {
+            if (current && data[slugField] !== current[slugField]) {
               data[slugField] = await findUniqueSlug(
-                strapi, uid, slugField, data[slugField], where.id
+                strapi, uid, slugField, data[slugField], current.documentId
               );
             }
           }
