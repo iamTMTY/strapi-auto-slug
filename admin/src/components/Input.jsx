@@ -98,7 +98,7 @@ const Input = React.forwardRef(
         name={name}
         id={name}
         error={field.error}
-        hint={hint || 'Auto-generated from the source field.'}
+        hint={hint}
         required={required}
       >
         <Field.Label>{fieldLabel}</Field.Label>
