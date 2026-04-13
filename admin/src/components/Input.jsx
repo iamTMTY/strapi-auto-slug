@@ -31,59 +31,45 @@ const Input = React.forwardRef(
     const preserveOnEdit = opts.preserveOnEdit !== false;
     const autoGenerateIfEmpty = opts.autoGenerateIfEmpty !== false;
 
-    const hasValueOnMount = useRef(false);
+    // Detect create vs edit from the URL (avoids async data-loading timing issues)
+    const isCreateMode =
+      typeof window !== 'undefined' &&
+      window.location.pathname.endsWith('/create');
+
+    // Track whether we (auto-generation) set the slug value
+    const weSetSlug = useRef(false);
+    // Track whether the user manually edited the slug
     const userModified = useRef(false);
-    const initialized = useRef(false);
-
-    useEffect(() => {
-      if (!initialized.current) {
-        initialized.current = true;
-        if (field.value) {
-          hasValueOnMount.current = true;
-        }
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    // Determine whether auto-generation should run right now
-    const shouldAutoGenerate = () => {
-      // User manually edited the slug and that setting is enabled
-      if (stopOnManualEdit && userModified.current) return false;
-
-      if (hasValueOnMount.current) {
-        // Existing entry with a slug value
-        if (preserveOnEdit) return false;
-      } else if (!hasValueOnMount.current && initialized.current) {
-        // Either a new entry or an existing entry with an empty slug
-        const isNewEntry = !hasValueOnMount.current;
-
-        if (isNewEntry && !autoGenerateOnCreate) return false;
-
-        // For existing entries with empty slug, check autoGenerateIfEmpty
-        // We can't perfectly distinguish "new" from "existing with empty slug"
-        // from the client alone, but autoGenerateIfEmpty covers both when
-        // autoGenerateOnCreate is also true. If autoGenerateOnCreate is false
-        // but autoGenerateIfEmpty is true, we still generate (since the slug IS empty).
-        // The only case we block is when both are false.
-        if (!autoGenerateOnCreate && !autoGenerateIfEmpty) return false;
-      }
-
-      return true;
-    };
 
     // Auto-generate slug from source field in real-time
     useEffect(() => {
-      if (sourceFieldName && shouldAutoGenerate()) {
-        const newSlug = sourceField.value ? slugify(sourceField.value) : '';
-        if (newSlug !== field.value) {
-          field.onChange(name, newSlug);
-        }
+      if (!sourceFieldName) return;
+
+      // User manually edited — respect stopOnManualEdit
+      if (stopOnManualEdit && userModified.current) return;
+
+      if (isCreateMode) {
+        // Create mode
+        if (!autoGenerateOnCreate) return;
+      } else {
+        // Edit mode — if slug has a value we didn't set, it came from the DB
+        if (field.value && !weSetSlug.current && preserveOnEdit) return;
+
+        // Edit mode — slug is empty
+        if (!field.value && !weSetSlug.current && !autoGenerateIfEmpty) return;
+      }
+
+      const newSlug = sourceField.value ? slugify(sourceField.value) : '';
+      if (newSlug !== field.value) {
+        weSetSlug.current = true;
+        field.onChange(name, newSlug);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sourceField.value]);
 
     const handleChange = (e) => {
       userModified.current = true;
+      weSetSlug.current = false;
       field.onChange(name, e.target.value);
     };
 
