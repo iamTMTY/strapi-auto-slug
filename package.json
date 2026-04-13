@@ -1,6 +1,6 @@
 {
   "name": "strapi-auto-slug",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Auto-generate URL-friendly slugs from text fields in Strapi v5",
   "keywords": [
     "strapi",
@@ -13,18 +13,16 @@
   "author": "Temitayo Salaudeen",
   "exports": {
     "./strapi-admin": {
-      "types": "./dist/admin/src/index.d.ts",
       "source": "./admin/src/index.js",
-      "import": "./dist/admin/index.mjs",
-      "require": "./dist/admin/index.js",
-      "default": "./dist/admin/index.js"
+      "import": "./admin/src/index.js",
+      "require": "./admin/src/index.js",
+      "default": "./admin/src/index.js"
     },
     "./strapi-server": {
-      "types": "./dist/server/src/index.d.ts",
       "source": "./server/src/index.js",
-      "import": "./dist/server/index.mjs",
-      "require": "./dist/server/index.js",
-      "default": "./dist/server/index.js"
+      "import": "./server/src/index.js",
+      "require": "./server/src/index.js",
+      "default": "./server/src/index.js"
     },
     "./package.json": "./package.json"
   },
