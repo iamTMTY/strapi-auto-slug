@@ -1,6 +1,6 @@
 {
   "name": "strapi-auto-slug",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Auto-generate URL-friendly slugs from text fields in Strapi v5",
   "keywords": [
     "strapi",
