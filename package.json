@@ -9,6 +9,14 @@
     "slug",
     "auto-slug"
   ],
+  "homepage": "https://github.com/iamTMTY/strapi-auto-slug#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iamTMTY/strapi-auto-slug.git"
+  },
+  "bugs": {
+    "url": "https://github.com/iamTMTY/strapi-auto-slug/issues"
+  },
   "license": "MIT",
   "author": "Temitayo Salaudeen",
   "exports": {
