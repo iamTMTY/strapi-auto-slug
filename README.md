@@ -4,8 +4,8 @@ A custom field plugin for Strapi v5 that automatically generates URL-friendly sl
 
 ## Features
 
-- **Real-time slug generation** — slugs are generated instantly as you type, not on save
-- **Source field selector** — pick which text field to generate the slug from using a dropdown (no manual typing)
+- **Real-time slug generation** — slugs are generated instantly as you type.
+- **Source field selector** — pick which text field to generate the slug from using a dropdown.
 - **Duplicate handling** — automatically appends `-1`, `-2`, etc. to ensure uniqueness
 - **Configurable behavior** — control auto-generation rules per field via the Content-Type Builder
 - **API fallback** — slugs are also generated server-side for entries created via the API
