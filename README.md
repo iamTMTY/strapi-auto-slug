@@ -48,13 +48,13 @@ When creating content, the slug field will automatically populate as you type in
 
 Each auto-slug field can be configured with the following options in the **Advanced settings** tab:
 
-| Setting | Default | Description |
-|---------|---------|-------------|
-| **Auto-generate slug on creation** | Enabled | Generate the slug from the source field when creating a new entry |
-| **Stop auto-generation after manual edit** | Enabled | Stop syncing with the source field once the user manually edits the slug |
-| **Preserve slug when editing** | Enabled | Keep the existing slug when editing an entry, even if the source field changes |
-| **Auto-generate for empty slugs on existing entries** | Enabled | Treat existing entries with an empty slug the same as new entries |
-| **Required field** | Disabled | Prevent saving if the slug field is empty |
+| Setting                                               | Default  | Description                                                                    |
+| ----------------------------------------------------- | -------- | ------------------------------------------------------------------------------ |
+| **Auto-generate slug on creation**                    | Enabled  | Generate the slug from the source field when creating a new entry              |
+| **Stop auto-generation after manual edit**            | Enabled  | Stop syncing with the source field once the user manually edits the slug       |
+| **Preserve slug when editing**                        | Enabled  | Keep the existing slug when editing an entry, even if the source field changes |
+| **Auto-generate for empty slugs on existing entries** | Enabled  | Treat existing entries with an empty slug the same as new entries              |
+| **Required field**                                    | Disabled | Prevent saving if the slug field is empty                                      |
 
 ## How It Works
 
@@ -85,13 +85,13 @@ The slugify algorithm:
 
 **Examples:**
 
-| Input | Slug |
-|-------|------|
-| `Hello World` | `hello-world` |
-| `My Blog Post!` | `my-blog-post` |
-| `Café & Résumé` | `cafe-resume` |
+| Input                    | Slug               |
+| ------------------------ | ------------------ |
+| `Hello World`            | `hello-world`      |
+| `My Blog Post!`          | `my-blog-post`     |
+| `Café & Résumé`          | `cafe-resume`      |
 | `--Leading & Trailing--` | `leading-trailing` |
-| `Multiple   Spaces` | `multiple-spaces` |
+| `Multiple   Spaces`      | `multiple-spaces`  |
 
 ## Compatibility
 

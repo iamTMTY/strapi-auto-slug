@@ -33,8 +33,7 @@ const Input = React.forwardRef(
 
     // Detect create vs edit from the URL (avoids async data-loading timing issues)
     const isCreateMode =
-      typeof window !== 'undefined' &&
-      window.location.pathname.endsWith('/create');
+      typeof window !== 'undefined' && window.location.pathname.endsWith('/create');
 
     // Track whether we (auto-generation) set the slug value
     const weSetSlug = useRef(false);
@@ -80,13 +79,7 @@ const Input = React.forwardRef(
       : 'Auto Slug';
 
     return (
-      <Field.Root
-        name={name}
-        id={name}
-        error={field.error}
-        hint={hint}
-        required={required}
-      >
+      <Field.Root name={name} id={name} error={field.error} hint={hint} required={required}>
         <Field.Label>{fieldLabel}</Field.Label>
         <TextInput
           ref={ref}

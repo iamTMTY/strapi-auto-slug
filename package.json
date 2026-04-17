@@ -41,9 +41,12 @@
   ],
   "scripts": {
     "build": "strapi-plugin build",
+    "format": "prettier --write \"**/*.{js,jsx,json,md}\"",
+    "test": "jest",
     "verify": "strapi-plugin verify",
     "watch": "strapi-plugin watch",
-    "watch:link": "strapi-plugin watch:link"
+    "watch:link": "strapi-plugin watch:link",
+    "prepare": "husky"
   },
   "dependencies": {
     "@strapi/design-system": "^2.0.0",
@@ -53,6 +56,10 @@
   "devDependencies": {
     "@strapi/sdk-plugin": "^5.3.2",
     "@strapi/strapi": "^5.0.0",
+    "husky": "^9.1.7",
+    "jest": "^30.3.0",
+    "lint-staged": "^16.4.0",
+    "prettier": "^3.8.2",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-router-dom": "^6.30.0",
@@ -64,6 +71,9 @@
     "react-dom": "^17.0.0 || ^18.0.0",
     "react-router-dom": "^6.30.0",
     "styled-components": "^6.0.0"
+  },
+  "lint-staged": {
+    "*.{js,jsx,json,md}": "prettier --write"
   },
   "strapi": {
     "kind": "plugin",

@@ -72,8 +72,7 @@ export default {
                 },
                 description: {
                   id: `${pluginId}.options.stopOnManualEdit.description`,
-                  defaultMessage:
-                    'Stop auto-generating when the user manually modifies the slug',
+                  defaultMessage: 'Stop auto-generating when the user manually modifies the slug',
                 },
               },
               {
@@ -121,8 +120,7 @@ export default {
                 },
                 description: {
                   id: `${pluginId}.options.advanced.requiredField.description`,
-                  defaultMessage:
-                    "You won't be able to create an entry if this field is empty",
+                  defaultMessage: "You won't be able to create an entry if this field is empty",
                 },
               },
             ],

@@ -19,8 +19,7 @@ const SelectSourceField = ({
 
   // Only show string and text fields, excluding other custom fields
   const textFields = attributes.filter(
-    (attr) =>
-      (attr.type === 'string' || attr.type === 'text') && !attr.customField
+    (attr) => (attr.type === 'string' || attr.type === 'text') && !attr.customField
   );
 
   const label = intlLabel?.id ? formatMessage(intlLabel) : 'Source field';
@@ -28,13 +27,7 @@ const SelectSourceField = ({
   const hint = description?.id ? formatMessage(description) : '';
 
   return (
-    <Field.Root
-      name={name}
-      id={name}
-      error={error}
-      hint={hint}
-      required={required}
-    >
+    <Field.Root name={name} id={name} error={error} hint={hint} required={required}>
       <Field.Label>{label}</Field.Label>
       <SingleSelect
         disabled={disabled}

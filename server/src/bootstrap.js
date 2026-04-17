@@ -11,10 +11,10 @@ function slugify(text) {
     .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
     .toLowerCase()
     .trim()
-    .replace(/[^\w\s-]/g, '')       // Remove non-word chars (except spaces and hyphens)
-    .replace(/[\s_]+/g, '-')        // Replace spaces and underscores with hyphens
-    .replace(/-+/g, '-')            // Collapse multiple hyphens
-    .replace(/^-+|-+$/g, '');       // Trim hyphens from edges
+    .replace(/[^\w\s-]/g, '') // Remove non-word chars (except spaces and hyphens)
+    .replace(/[\s_]+/g, '-') // Replace spaces and underscores with hyphens
+    .replace(/-+/g, '-') // Collapse multiple hyphens
+    .replace(/^-+|-+$/g, ''); // Trim hyphens from edges
 }
 
 /**
@@ -79,7 +79,13 @@ const bootstrap = ({ strapi }) => {
         for (const [slugField, sourceField] of Object.entries(slugFields)) {
           if (data[slugField]) {
             // Slug provided (from admin or API) — ensure uniqueness
-            data[slugField] = await findUniqueSlug(strapi, uid, slugField, data[slugField], documentId);
+            data[slugField] = await findUniqueSlug(
+              strapi,
+              uid,
+              slugField,
+              data[slugField],
+              documentId
+            );
           } else if (data[sourceField]) {
             // Fallback for API calls without the admin panel
             const baseSlug = slugify(data[sourceField]);
@@ -100,7 +106,11 @@ const bootstrap = ({ strapi }) => {
             });
             if (current && data[slugField] !== current[slugField]) {
               data[slugField] = await findUniqueSlug(
-                strapi, uid, slugField, data[slugField], current.documentId
+                strapi,
+                uid,
+                slugField,
+                data[slugField],
+                current.documentId
               );
             }
           }
