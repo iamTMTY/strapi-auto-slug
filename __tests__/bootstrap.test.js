@@ -51,6 +51,17 @@ const MULTI_SLUG_CONTENT_TYPE = {
   },
 };
 
+// A content-type with unique disabled
+const NON_UNIQUE_CONTENT_TYPE = {
+  attributes: {
+    title: { type: 'string' },
+    slug: {
+      customField: 'plugin::auto-slug.slug',
+      options: { sourceField: 'title', unique: false },
+    },
+  },
+};
+
 // A content-type with no slug fields
 const PLAIN_CONTENT_TYPE = {
   attributes: {
@@ -510,6 +521,79 @@ describe('multiple slug fields on a single content-type', () => {
 
     expect(event.params.data.titleSlug).toBe('custom-title-slug');
     expect(event.params.data.nameSlug).toBe('product-name');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// unique option
+// ---------------------------------------------------------------------------
+
+describe('unique option', () => {
+  test('skips uniqueness check on create when unique is false', async () => {
+    const findMany = jest.fn();
+    const strapi = createStrapiMock({ 'api::article.article': NON_UNIQUE_CONTENT_TYPE }, findMany);
+
+    bootstrap({ strapi });
+
+    const hook = strapi.db.lifecycles.subscribe.mock.calls[0][0].beforeCreate;
+    const event = { params: { data: { title: 'Hello World' } } };
+    await hook(event);
+
+    expect(event.params.data.slug).toBe('hello-world');
+    expect(findMany).not.toHaveBeenCalled();
+  });
+
+  test('skips uniqueness check on create when slug is provided and unique is false', async () => {
+    const findMany = jest.fn();
+    const strapi = createStrapiMock({ 'api::article.article': NON_UNIQUE_CONTENT_TYPE }, findMany);
+
+    bootstrap({ strapi });
+
+    const hook = strapi.db.lifecycles.subscribe.mock.calls[0][0].beforeCreate;
+    const event = { params: { data: { title: 'Test', slug: 'my-slug' } } };
+    await hook(event);
+
+    expect(event.params.data.slug).toBe('my-slug');
+    expect(findMany).not.toHaveBeenCalled();
+  });
+
+  test('skips uniqueness check on update when unique is false', async () => {
+    const findMany = jest.fn();
+    const findOne = jest.fn();
+    const strapi = createStrapiMock(
+      { 'api::article.article': NON_UNIQUE_CONTENT_TYPE },
+      findMany,
+      findOne
+    );
+
+    bootstrap({ strapi });
+
+    const hook = strapi.db.lifecycles.subscribe.mock.calls[0][0].beforeUpdate;
+    const event = {
+      params: {
+        data: { slug: 'new-slug' },
+        where: { id: 1 },
+      },
+    };
+    await hook(event);
+
+    expect(findOne).not.toHaveBeenCalled();
+    expect(findMany).not.toHaveBeenCalled();
+    expect(event.params.data.slug).toBe('new-slug');
+  });
+
+  test('defaults to unique: true when option is not set', async () => {
+    const findMany = jest.fn().mockResolvedValue([]);
+    const strapi = createStrapiMock({ 'api::article.article': ARTICLE_CONTENT_TYPE }, findMany);
+
+    bootstrap({ strapi });
+
+    const hook = strapi.db.lifecycles.subscribe.mock.calls[0][0].beforeCreate;
+    const event = { params: { data: { title: 'Test' } } };
+    await hook(event);
+
+    // findMany was called — uniqueness check ran
+    expect(findMany).toHaveBeenCalled();
   });
 });
 

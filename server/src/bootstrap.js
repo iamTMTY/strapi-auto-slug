@@ -62,7 +62,10 @@ const bootstrap = ({ strapi }) => {
       if (attr.customField === 'plugin::auto-slug.slug') {
         const sourceField = attr.options?.sourceField;
         if (sourceField) {
-          slugFields[attrName] = sourceField;
+          slugFields[attrName] = {
+            sourceField,
+            unique: attr.options?.unique !== false,
+          };
         }
       }
     }
@@ -76,21 +79,25 @@ const bootstrap = ({ strapi }) => {
         const { data } = event.params;
         const documentId = data.documentId;
 
-        for (const [slugField, sourceField] of Object.entries(slugFields)) {
+        for (const [slugField, config] of Object.entries(slugFields)) {
           if (data[slugField]) {
-            // Slug provided (from admin or API) — ensure uniqueness
-            data[slugField] = await findUniqueSlug(
-              strapi,
-              uid,
-              slugField,
-              data[slugField],
-              documentId
-            );
-          } else if (data[sourceField]) {
+            // Slug provided (from admin or API) — ensure uniqueness if enabled
+            if (config.unique) {
+              data[slugField] = await findUniqueSlug(
+                strapi,
+                uid,
+                slugField,
+                data[slugField],
+                documentId
+              );
+            }
+          } else if (data[config.sourceField]) {
             // Fallback for API calls without the admin panel
-            const baseSlug = slugify(data[sourceField]);
+            const baseSlug = slugify(data[config.sourceField]);
             if (baseSlug) {
-              data[slugField] = await findUniqueSlug(strapi, uid, slugField, baseSlug, documentId);
+              data[slugField] = config.unique
+                ? await findUniqueSlug(strapi, uid, slugField, baseSlug, documentId)
+                : baseSlug;
             }
           }
         }
@@ -99,7 +106,9 @@ const bootstrap = ({ strapi }) => {
       async beforeUpdate(event) {
         const { data, where } = event.params;
 
-        for (const [slugField] of Object.entries(slugFields)) {
+        for (const [slugField, config] of Object.entries(slugFields)) {
+          if (!config.unique) continue;
+
           if (data[slugField] && where?.id) {
             const current = await strapi.db.query(uid).findOne({
               where: { id: where.id },

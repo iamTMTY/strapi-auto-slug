@@ -37,6 +37,21 @@ export default {
                 },
                 name: 'options.sourceField',
                 type: 'select-source-field',
+                required: true,
+              },
+              {
+                name: 'options.unique',
+                type: 'checkbox',
+                defaultValue: true,
+                intlLabel: {
+                  id: `${pluginId}.options.unique.label`,
+                  defaultMessage: 'Unique',
+                },
+                description: {
+                  id: `${pluginId}.options.unique.description`,
+                  defaultMessage:
+                    'Ensure the slug is unique across all entries of this content type',
+                },
               },
             ],
           },

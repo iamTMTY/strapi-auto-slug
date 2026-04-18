@@ -50,6 +50,7 @@ const Input = React.forwardRef(
     const stopOnManualEdit = opts.stopOnManualEdit !== false;
     const preserveOnEdit = opts.preserveOnEdit !== false;
     const autoGenerateIfEmpty = opts.autoGenerateIfEmpty !== false;
+    const unique = opts.unique !== false;
 
     // Detect create vs edit from the URL (avoids async data-loading timing issues)
     const isCreateMode =
@@ -140,7 +141,7 @@ const Input = React.forwardRef(
       if (newSlug !== field.value) {
         weSetSlug.current = true;
         field.onChange(name, newSlug);
-        checkAvailability(newSlug);
+        if (unique) checkAvailability(newSlug);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sourceField.value]);
@@ -150,7 +151,7 @@ const Input = React.forwardRef(
       weSetSlug.current = false;
       const value = e.target.value;
       field.onChange(name, value);
-      checkAvailability(value);
+      if (unique) checkAvailability(value);
     };
 
     const fieldLabel = label
