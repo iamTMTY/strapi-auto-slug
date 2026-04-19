@@ -1,4 +1,5 @@
 import { Link as LinkIcon } from '@strapi/icons';
+import * as yup from 'yup';
 import SelectSourceField from './components/SelectSourceField';
 
 const pluginId = 'auto-slug';
@@ -22,6 +23,9 @@ export default {
         Input: async () => import('./components/Input'),
       },
       options: {
+        validator: () => ({
+          sourceField: yup.string().required('Source field is required'),
+        }),
         base: [
           {
             sectionTitle: null,

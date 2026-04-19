@@ -22,15 +22,15 @@
   "exports": {
     "./strapi-admin": {
       "source": "./admin/src/index.js",
-      "import": "./admin/src/index.js",
-      "require": "./admin/src/index.js",
-      "default": "./admin/src/index.js"
+      "import": "./dist/admin/index.mjs",
+      "require": "./dist/admin/index.js",
+      "default": "./dist/admin/index.js"
     },
     "./strapi-server": {
       "source": "./server/src/index.js",
-      "import": "./server/src/index.js",
-      "require": "./server/src/index.js",
-      "default": "./server/src/index.js"
+      "import": "./dist/server/index.mjs",
+      "require": "./dist/server/index.js",
+      "default": "./dist/server/index.js"
     },
     "./package.json": "./package.json"
   },
